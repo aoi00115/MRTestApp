@@ -50,6 +50,8 @@ namespace MixedReality.Toolkit.Examples.Demos
         private IDictationSubsystem dictationSubsystem = null;
         private IKeywordRecognitionSubsystem keywordRecognitionSubsystem = null;
 
+        public static bool recognized;
+
         /// <summary>
         /// Start dictation on a DictationSubsystem.
         /// </summary>
@@ -94,12 +96,12 @@ namespace MixedReality.Toolkit.Examples.Demos
 
         private void DictationSubsystem_Recognized(DictationResultEventArgs obj)
         {
-            OnSpeechRecognized.Invoke("Recognized:" + obj.Result);
+            OnSpeechRecognized.Invoke(obj.Result);
         }
 
         private void DictationSubsystem_Recognizing(DictationResultEventArgs obj)
         {
-            OnSpeechRecognizing.Invoke("Recognizing:" + obj.Result);
+            OnSpeechRecognizing.Invoke(obj.Result);
         }
 
         /// <summary>

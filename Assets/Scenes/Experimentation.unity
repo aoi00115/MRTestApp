@@ -1139,6 +1139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 550245354}
   - component: {fileID: 550245355}
+  - component: {fileID: 550245356}
   m_Layer: 5
   m_Name: DictationHandler
   m_TagString: Untagged
@@ -1285,6 +1286,56 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &550245356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550245353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575c660c16b00ce49a59550688a2b51c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recognizedSentence: {fileID: 6755669246913862924}
+  triggerWords:
+  - put
+  - remove
+  triggerPhrases:
+  - object a
+  - object b
+  - object c
+  - in front of
+  - to the right of
+  - to the left of
+  - behind
+  - a1
+  - a2
+  - a3
+  - b1
+  - b2
+  - b3
+  - c1
+  - c2
+  - c3
+  parsedPhraseTransform: 
+  parsedPhraseTargetObject: 
+  parsedPhrasePosition: 
+  parsedPhraseRelativeObject: 
+  objectA: {fileID: 9010681162570974118}
+  objectB: {fileID: 6750007285050646816}
+  objectC: {fileID: 5176111291008008323}
+  gridPositions:
+  - {fileID: 1802110704}
+  - {fileID: 2112137972}
+  - {fileID: 1980253424}
+  - {fileID: 775035530}
+  - {fileID: 830792604}
+  - {fileID: 1700644683}
+  - {fileID: 728654218}
+  - {fileID: 1822324469}
+  - {fileID: 1315134944}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
