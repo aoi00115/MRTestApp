@@ -50,7 +50,7 @@ namespace MixedReality.Toolkit.Examples.Demos
         private IDictationSubsystem dictationSubsystem = null;
         private IKeywordRecognitionSubsystem keywordRecognitionSubsystem = null;
 
-        public static bool recognized;
+        public VoiceCommand voiceCommand;
 
         /// <summary>
         /// Start dictation on a DictationSubsystem.
@@ -59,6 +59,10 @@ namespace MixedReality.Toolkit.Examples.Demos
         {
             // Make sure there isn't an ongoing recognition session
             StopRecognition();
+
+            // Resetting the bool for the next transcription
+            voiceCommand.ResetRecognitionResult();
+            voiceCommand.recognizedSentence.text = null;
 
             dictationSubsystem = XRSubsystemHelpers.DictationSubsystem;
             if (dictationSubsystem != null)
@@ -90,18 +94,27 @@ namespace MixedReality.Toolkit.Examples.Demos
 
         private void DictationSubsystem_RecognitionFinished(DictationSessionEventArgs obj)
         {
-            OnRecognitionFinished.Invoke("Recognition finished. Reason: " + obj.ReasonString);
+            // OnRecognitionFinished.Invoke("Recognition finished. Reason: " + obj.ReasonString);
+            voiceCommand.recognizedSentence.text = voiceCommand.processedSentence;
             HandleDictationShutdown();
         }
 
         private void DictationSubsystem_Recognized(DictationResultEventArgs obj)
         {
             OnSpeechRecognized.Invoke(obj.Result);
+
+            // Resetting and showing the recognition result
+            voiceCommand.ResetRecognitionResult();
+            voiceCommand.ShowRecognitionResult();
         }
 
         private void DictationSubsystem_Recognizing(DictationResultEventArgs obj)
         {
             OnSpeechRecognizing.Invoke(obj.Result);
+
+            // Resetting and showing the recognition result
+            voiceCommand.ResetRecognitionResult();
+            voiceCommand.ShowRecognitionResult();
         }
 
         /// <summary>
