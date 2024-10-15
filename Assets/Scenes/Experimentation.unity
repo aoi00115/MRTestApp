@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &78107933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 78107934}
+  m_Layer: 0
+  m_Name: RestingPositionB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &78107934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78107933}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.332, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 0.0216, z: 0.02488}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 266193007344044977}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &121662254
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,7 +1499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575c660c16b00ce49a59550688a2b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableDebugMode: 0
+  enableDebugMode: 1
   isRecognized: 0
   debugTexts:
   - {fileID: 1331254885}
@@ -1477,19 +1508,22 @@ MonoBehaviour:
   - {fileID: 355546501}
   recognizedSentence: {fileID: 6755669246913862924}
   processedSentence: 
-  triggerPhrases:
+  triggerWords:
   - put
   - place
-  - remove
   - move
+  - remove
+  - swap
+  - replace
   - rotate
+  - behind
+  triggerPhrases:
   - object a
   - object b
   - object c
   - in front of
   - to the right of
   - to the left of
-  - behind
   - a1
   - a2
   - a3
@@ -1543,6 +1577,40 @@ MonoBehaviour:
   - {fileID: 728654218}
   - {fileID: 1822324469}
   - {fileID: 1315134944}
+  restingPositionA: {fileID: 629268348}
+  restingPositionB: {fileID: 78107934}
+  restingPositionC: {fileID: 756599574}
+--- !u!1 &629268347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 629268348}
+  m_Layer: 0
+  m_Name: RestingPositionA
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &629268348
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629268347}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.332, y: 0, z: 0.66}
+  m_LocalScale: {x: 1, y: 0.0216, z: 0.02488}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 266193007344044977}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1663,6 +1731,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.666, y: 0, z: -0.66}
+  m_LocalScale: {x: 1, y: 0.021599999, z: 0.02488}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 266193007344044977}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &756599573
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 756599574}
+  m_Layer: 0
+  m_Name: RestingPositionC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &756599574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756599573}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.332, y: 0, z: -0.66}
   m_LocalScale: {x: 1, y: 0.021599999, z: 0.02488}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4454,6 +4553,9 @@ Transform:
   - {fileID: 728654218}
   - {fileID: 1822324469}
   - {fileID: 1315134944}
+  - {fileID: 629268348}
+  - {fileID: 78107934}
+  - {fileID: 756599574}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &301231746143981310
@@ -6775,7 +6877,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '- Transcribed text goes here -'
+  m_text: move object b to c1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fea6b26abeefbc547b6aca1dbda0a34d, type: 2}
   m_sharedMaterial: {fileID: -2049848100760321927, guid: fea6b26abeefbc547b6aca1dbda0a34d, type: 2}
