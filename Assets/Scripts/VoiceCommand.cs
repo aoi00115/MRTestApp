@@ -44,9 +44,9 @@ public class VoiceCommand : MonoBehaviour
         // Moving objects to their respective resting positions
         objectA.SetParent(restingPositionA);
         objectA.localPosition = Vector3.zero;
-        objectB.SetParent(gridPositions[0]);
+        objectB.SetParent(restingPositionB);
         objectB.localPosition = Vector3.zero;
-        objectC.SetParent(gridPositions[8]);
+        objectC.SetParent(restingPositionC);
         objectC.localPosition = Vector3.zero;
     }
 

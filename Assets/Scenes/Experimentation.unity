@@ -1499,7 +1499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575c660c16b00ce49a59550688a2b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableDebugMode: 1
+  enableDebugMode: 0
   isRecognized: 0
   debugTexts:
   - {fileID: 1331254885}
@@ -6877,7 +6877,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: move object b to c1
+  m_text: '- Transcribed text goes here -'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fea6b26abeefbc547b6aca1dbda0a34d, type: 2}
   m_sharedMaterial: {fileID: -2049848100760321927, guid: fea6b26abeefbc547b6aca1dbda0a34d, type: 2}
