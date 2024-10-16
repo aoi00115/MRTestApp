@@ -803,7 +803,7 @@ public class VoiceCommand : MonoBehaviour
         errorMessageText.text = message;
         errorMessage.gameObject.SetActive(true);
         audioSource.PlayOneShot(errorSound, 0);
-        Invoke("CloseErrorMessage()", 5f);
+        Invoke("CloseErrorMessage", 5f);
     }
 
     void CloseErrorMessage()
