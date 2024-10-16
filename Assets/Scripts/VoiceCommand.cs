@@ -38,6 +38,9 @@ public class VoiceCommand : MonoBehaviour
     public Transform[] gridPositions;
     public Transform restingPositionA, restingPositionB, restingPositionC;
 
+    public Transform errorMessage;
+    public AudioClip errorSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -380,6 +383,8 @@ public class VoiceCommand : MonoBehaviour
         isTargetObjectRecognized = false;
         isPositionRecognized = false;
         isRelativeObjectRecognized = false;
+
+        errorMessage.gameObject.SetActive(false);
     }
 
     void ReplaceTextToNumerical(string sentence, string phrase)
@@ -701,12 +706,25 @@ public class VoiceCommand : MonoBehaviour
                             tempTargetObject.localPosition = Vector3.zero;
                             Debug.Log(targetObject + " was successfully put in " + position);
                         }
-                        else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) Debug.Log(tempTargetObject.name + " already exists in " + position);
-                        else Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                        else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
+                        {
+                            Debug.Log(tempTargetObject.name + " already exists in " + position);
+                            ShowErrorMessage(tempTargetObject.name + " already exists in " + position);
+                        }
+                        else 
+                        {
+                            Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                            ShowErrorMessage(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                        }
                     }
                     if(transform == "remove")
                     {
-                        if(CalculatePosition(position, relativeObject).childCount == 0) Debug.Log(position + " does not contain " + targetObject + " to be removed");
+                        if(CalculatePosition(position, relativeObject).childCount == 0) 
+                        {
+                            Debug.Log(position + " does not contain " + targetObject + " to be removed");
+                            ShowErrorMessage(position + " does not contain " + targetObject + " to be removed");
+
+                        }
                         else
                         {
                             // Put target object in the position only when the position is not taken by another object
@@ -727,11 +745,28 @@ public class VoiceCommand : MonoBehaviour
                                 tempTargetObject.localPosition = Vector3.zero;
                                 Debug.Log(targetObject + " was successfully moved to " + position);
                             }
-                            else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) Debug.Log(tempTargetObject.name + " already exists in " + position);
-                            else if(!gridPositions.Contains(tempRelativeObject.parent)) Debug.Log(relativeObject + " does not exist in the grid");
-                            else Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                            else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
+                            {
+                                Debug.Log(tempTargetObject.name + " already exists in " + position);
+                                ShowErrorMessage(tempTargetObject.name + " already exists in " + position);
+                            }
+                            else if(!gridPositions.Contains(tempRelativeObject.parent)) 
+                            {
+                                Debug.Log(relativeObject + " does not exist in the grid");
+                                ShowErrorMessage(relativeObject + " does not exist in the grid");
+                            }
+                            else 
+                            {
+                                Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                                ShowErrorMessage(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                            }
                         }
-                        else Debug.Log(targetObject + " does not exist in the grid");
+                        else 
+                        {
+                            Debug.Log(targetObject + " does not exist in the grid");
+                            ShowErrorMessage(targetObject + " does not exist in the grid");
+                        }
+                        
                     }
                     if(transform == "replace" || transform == "swap")
                     {
@@ -747,12 +782,31 @@ public class VoiceCommand : MonoBehaviour
                 else
                 {
                     Debug.Log("Column/Row limit is exceeded or The relative object is in the resting position");
+                    ShowErrorMessage("Column/Row limit is exceeded or The relative object is in the resting position");
                 }
             }
             else
             {
                 Debug.Log("The referenced object in use");
+                ShowErrorMessage("The referenced object in use");
+
             }
         }
+    }
+
+    void ShowErrorMessage(string message)
+    {
+        AudioSource audioSource = this.GetComponent<AudioSource>();
+        TextMeshProUGUI errorMessageText = errorMessage.Find("Background/ErrorMessageText").GetComponent<TextMeshProUGUI>();
+
+        errorMessageText.text = message;
+        errorMessage.gameObject.SetActive(true);
+        audioSource.PlayOneShot(errorSound, 0);
+        Invoke("CloseErrorMessage()", 5f);
+    }
+
+    void CloseErrorMessage()
+    {
+        errorMessage.gameObject.SetActive(false);
     }
 }
