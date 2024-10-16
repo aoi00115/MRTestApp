@@ -106,6 +106,7 @@ namespace MixedReality.Toolkit.Examples.Demos
             // Resetting and showing the recognition result
             voiceCommand.ResetRecognitionResult();
             voiceCommand.ShowRecognitionResult();
+            voiceCommand.ShowErrorMessage();
         }
 
         private void DictationSubsystem_Recognizing(DictationResultEventArgs obj)

@@ -710,12 +710,12 @@ public class VoiceCommand : MonoBehaviour
                         else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
                         {
                             Debug.Log(tempTargetObject.name + " already exists in " + position);
-                            ShowErrorMessage(tempTargetObject.name + " already exists in " + position);
+                            ChangeErrorMessageText(tempTargetObject.name + " already exists in " + position);
                         }
                         else 
                         {
                             Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
-                            ShowErrorMessage(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                            ChangeErrorMessageText(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
                         }
                     }
                     if(transform == "remove")
@@ -723,7 +723,7 @@ public class VoiceCommand : MonoBehaviour
                         if(CalculatePosition(position, relativeObject).childCount == 0) 
                         {
                             Debug.Log(position + " does not contain " + targetObject + " to be removed");
-                            ShowErrorMessage(position + " does not contain " + targetObject + " to be removed");
+                            ChangeErrorMessageText(position + " does not contain " + targetObject + " to be removed");
 
                         }
                         else
@@ -749,23 +749,23 @@ public class VoiceCommand : MonoBehaviour
                             else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
                             {
                                 Debug.Log(tempTargetObject.name + " already exists in " + position);
-                                ShowErrorMessage(tempTargetObject.name + " already exists in " + position);
+                                ChangeErrorMessageText(tempTargetObject.name + " already exists in " + position);
                             }
                             else if(!gridPositions.Contains(tempRelativeObject.parent)) 
                             {
                                 Debug.Log(relativeObject + " does not exist in the grid");
-                                ShowErrorMessage(relativeObject + " does not exist in the grid");
+                                ChangeErrorMessageText(relativeObject + " does not exist in the grid");
                             }
                             else 
                             {
                                 Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
-                                ShowErrorMessage(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                                ChangeErrorMessageText(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
                             }
                         }
                         else 
                         {
                             Debug.Log(targetObject + " does not exist in the grid");
-                            ShowErrorMessage(targetObject + " does not exist in the grid");
+                            ChangeErrorMessageText(targetObject + " does not exist in the grid");
                         }
                         
                     }
@@ -783,27 +783,30 @@ public class VoiceCommand : MonoBehaviour
                 else
                 {
                     Debug.Log("Column/Row limit is exceeded or The relative object is in the resting position");
-                    ShowErrorMessage("Column/Row limit is exceeded or The relative object is in the resting position");
+                    ChangeErrorMessageText("Column/Row limit is exceeded or The relative object is in the resting position");
                 }
             }
             else
             {
                 Debug.Log("The referenced object in use");
-                ShowErrorMessage("The referenced object in use");
+                ChangeErrorMessageText("The referenced object in use");
 
             }
         }
     }
 
-    void ShowErrorMessage(string message)
+    void ChangeErrorMessageText(string message)
+    {
+        TextMeshProUGUI errorMessageText = errorMessage.Find("Background/ErrorMessageText").GetComponent<TextMeshProUGUI>();
+        errorMessageText.text = message;
+    }
+
+    public void ShowErrorMessage()
     {
         AudioSource audioSource = this.GetComponent<AudioSource>();
-        TextMeshProUGUI errorMessageText = errorMessage.Find("Background/ErrorMessageText").GetComponent<TextMeshProUGUI>();
-
-        errorMessageText.text = message;
         errorMessage.gameObject.SetActive(true);
         audioSource.PlayOneShot(errorSound, 0);
-        Invoke("CloseErrorMessage", 5f);
+        Invoke("CloseErrorMessage", 10f);
     }
 
     void CloseErrorMessage()
