@@ -68,6 +68,7 @@ public class VoiceCommand : MonoBehaviour
             {
                 // Parsing words and showing the recognition result
                 ShowRecognitionResult();
+                ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
             }
             else
             {
@@ -75,8 +76,6 @@ public class VoiceCommand : MonoBehaviour
                 ResetRecognitionResult();
             }
         }
-
-        ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
 
 
 
@@ -366,6 +365,8 @@ public class VoiceCommand : MonoBehaviour
         debugTexts[1].text = "Target Object : " + parsedPhraseTargetObject;
         debugTexts[2].text = "Position : " + parsedPhrasePosition;
         debugTexts[3].text = "Relative Object : " + parsedPhraseRelativeObject;
+
+        ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
     }
 
     public void ResetRecognitionResult()
