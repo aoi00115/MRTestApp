@@ -9,11 +9,12 @@ using UnityEngine.UIElements;
 using UnityEngine.Windows.Speech;
 using TMPro;
 using MixedReality.Toolkit.Examples.Demos;
+using MixedReality.Toolkit;
 
 public class VoiceCommand : MonoBehaviour
 {
     // Setting the enableDebugMode allows it to simulate the DictationSubsystem_Recognizing and DictationSubsystem_Recognized function in DictationHandlerScript
-    public bool enableDebugMode;
+    public bool enableDebugMode = false;
     public bool isRecognized = false;
 
     public TextMeshProUGUI[] debugTexts;
@@ -33,12 +34,20 @@ public class VoiceCommand : MonoBehaviour
     public bool isTargetObjectRecognized = false;
     public bool isPositionRecognized = false;
     public bool isRelativeObjectRecognized = false;
+    string transformWhenRecognizing = "";
+    string targetObjectWhenRecognizing = "";
+    string positionWhenRecognizing = "";
+    string relativeObjectWhenRecognizing = "";
+
 
     public Transform objectA, objectB, objectC;
     public Transform[] gridPositions;
     public Transform restingPositionA, restingPositionB, restingPositionC;
 
+    public bool error = false;
     public Transform errorMessage;
+    public TextMeshProUGUI errorMessageText;
+    string errorMessageString;
     public AudioClip errorSound;
 
     // Start is called before the first frame update
@@ -58,26 +67,41 @@ public class VoiceCommand : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.X))
         {
-            isRecognized = !isRecognized;
-        }
-
-        if(enableDebugMode)
-        {
-            // Do the following only and only if the recognition is finished
             if(isRecognized)
             {
-                // Parsing words and showing the recognition result
-                ShowRecognitionResult();
-                ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
-            }
-            else
-            {
+                isRecognized = false;
+            
                 // Resetting all parameters for the next transcription
                 ResetRecognitionResult();
             }
+            else
+            {
+                isRecognized = true;
+
+                // Parsing words and showing the recognition result
+                ResetRecognitionResult();
+                ShowRecognitionResult("recognizing");
+                if(error)
+                {
+                    ShowErrorMessage();
+                }
+            }
         }
 
-
+        if(objectA.parent != restingPositionA || objectB.parent != restingPositionB || objectB.parent != restingPositionB)
+        {
+            Transform space = transform.Find("../Space");
+            Transform resetHologramButton = transform.Find("../ResetHologramButton");
+            space.gameObject.SetActive(true);
+            resetHologramButton.gameObject.SetActive(true);
+        }
+        else if(objectA.parent == restingPositionA || objectB.parent == restingPositionB || objectB.parent == restingPositionB)
+        {
+            Transform space = transform.Find("../Space");
+            Transform resetHologramButton = transform.Find("../ResetHologramButton");
+            space.gameObject.SetActive(false);
+            resetHologramButton.gameObject.SetActive(false);
+        }
 
 
         // // Parsed word that is responsible for object's transform : Put, Remove, Rotate
@@ -288,7 +312,7 @@ public class VoiceCommand : MonoBehaviour
         // }
     }
 
-    public void ShowRecognitionResult()
+    public void ShowRecognitionResult(string recognitionState)
     {
         // Checking words
         // Convert the sentence to lowercase
@@ -366,7 +390,29 @@ public class VoiceCommand : MonoBehaviour
         debugTexts[2].text = "Position : " + parsedPhrasePosition;
         debugTexts[3].text = "Relative Object : " + parsedPhraseRelativeObject;
 
-        ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
+        // Manipulate hologram again only when there's any change in parsed phrases
+        if(recognitionState == "recognizing")
+        {
+            // Do the following when recognizing 
+            ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
+            transformWhenRecognizing = parsedPhraseTransform;
+            targetObjectWhenRecognizing = parsedPhraseTargetObject;
+            positionWhenRecognizing = parsedPhrasePosition;
+            relativeObjectWhenRecognizing = parsedPhraseRelativeObject;
+        }
+        else if(recognitionState == "recognized" && (transformWhenRecognizing != parsedPhraseTransform || targetObjectWhenRecognizing != parsedPhraseTargetObject || positionWhenRecognizing != parsedPhrasePosition || relativeObjectWhenRecognizing != parsedPhraseRelativeObject))
+        {
+            // Do the following when recognized and there's any change in recognized phrases
+            ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
+        }
+        else if(recognitionState == "recognized")
+        {
+            // Reset the whenRecognizing string regardless after being recognized
+            transformWhenRecognizing = "";
+            targetObjectWhenRecognizing = "";
+            positionWhenRecognizing = "";
+            relativeObjectWhenRecognizing = "";
+        }
     }
 
     public void ResetRecognitionResult()
@@ -386,6 +432,7 @@ public class VoiceCommand : MonoBehaviour
         isRelativeObjectRecognized = false;
 
         errorMessage.gameObject.SetActive(false);
+        CancelInvoke();
     }
 
     void ReplaceTextToNumerical(string sentence, string phrase)
@@ -456,11 +503,11 @@ public class VoiceCommand : MonoBehaviour
 
     Transform CalculateRowInFront(string relativeObject)
     {
-        Transform tempAmbiguousObject = null;
-        if(relativeObject == "object a") tempAmbiguousObject = objectA;
-        if(relativeObject == "object b") tempAmbiguousObject = objectB;
-        if(relativeObject == "object c") tempAmbiguousObject = objectC;
-        string objectPosition = tempAmbiguousObject.parent.name;      // ex) objectPosition : A2
+        Transform tempObject = null;
+        if(relativeObject == "object a") tempObject = objectA;
+        if(relativeObject == "object b") tempObject = objectB;
+        if(relativeObject == "object c") tempObject = objectC;
+        string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
         string rowInFront = "";
@@ -492,11 +539,11 @@ public class VoiceCommand : MonoBehaviour
 
     Transform CalculateRowBehind(string relativeObject)
     {
-        Transform tempAmbiguousObject = null;
-        if(relativeObject == "object a") tempAmbiguousObject = objectA;
-        if(relativeObject == "object b") tempAmbiguousObject = objectB;
-        if(relativeObject == "object c") tempAmbiguousObject = objectC;
-        string objectPosition = tempAmbiguousObject.parent.name;      // ex) objectPosition : A2
+        Transform tempObject = null;
+        if(relativeObject == "object a") tempObject = objectA;
+        if(relativeObject == "object b") tempObject = objectB;
+        if(relativeObject == "object c") tempObject = objectC;
+        string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
         string rowBehind = "";
@@ -528,11 +575,11 @@ public class VoiceCommand : MonoBehaviour
 
     Transform CalculateColumnToRight(string relativeObject)
     {
-        Transform tempAmbiguousObject = null;
-        if(relativeObject == "object a") tempAmbiguousObject = objectA;
-        if(relativeObject == "object b") tempAmbiguousObject = objectB;
-        if(relativeObject == "object c") tempAmbiguousObject = objectC;
-        string objectPosition = tempAmbiguousObject.parent.name;      // ex) objectPosition : A2
+        Transform tempObject = null;
+        if(relativeObject == "object a") tempObject = objectA;
+        if(relativeObject == "object b") tempObject = objectB;
+        if(relativeObject == "object c") tempObject = objectC;
+        string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
         string columnToRight = "";
@@ -564,11 +611,11 @@ public class VoiceCommand : MonoBehaviour
 
     Transform CalculateColumnToLeft(string relativeObject)
     {
-        Transform tempAmbiguousObject = null;
-        if(relativeObject == "object a") tempAmbiguousObject = objectA;
-        if(relativeObject == "object b") tempAmbiguousObject = objectB;
-        if(relativeObject == "object c") tempAmbiguousObject = objectC;
-        string objectPosition = tempAmbiguousObject.parent.name;      // ex) objectPosition : A2
+        Transform tempObject = null;
+        if(relativeObject == "object a") tempObject = objectA;
+        if(relativeObject == "object b") tempObject = objectB;
+        if(relativeObject == "object c") tempObject = objectC;
+        string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
         string columnToLeft = "";
@@ -647,23 +694,23 @@ public class VoiceCommand : MonoBehaviour
             }
             else if(position == "")         // In case of swapping/replacing where there's no position with relative object
             {
-                Transform tempAmbiguousObject = null;
-                if(relativeObject == "object a") tempAmbiguousObject = objectA;
-                if(relativeObject == "object b") tempAmbiguousObject = objectB;
-                if(relativeObject == "object c") tempAmbiguousObject = objectC;
-                tempPosition = tempAmbiguousObject.parent;
+                Transform tempObject = null;
+                if(relativeObject == "object a") tempObject = objectA;
+                if(relativeObject == "object b") tempObject = objectB;
+                if(relativeObject == "object c") tempObject = objectC;
+                tempPosition = tempObject.parent;
             }
         }
         
         return tempPosition;
     }
 
-    Transform CalculateResetPosition(string ambiguousTargetObject)
+    Transform CalculateResetPosition(string targetObject)
     {
         Transform tempPosition = null;
-        if(ambiguousTargetObject == "object a") tempPosition = restingPositionA;
-        if(ambiguousTargetObject == "object b") tempPosition = restingPositionB;
-        if(ambiguousTargetObject == "object c") tempPosition = restingPositionC;
+        if(targetObject == "object a") tempPosition = restingPositionA;
+        if(targetObject == "object b") tempPosition = restingPositionB;
+        if(targetObject == "object c") tempPosition = restingPositionC;
 
         return tempPosition;
     }
@@ -689,8 +736,11 @@ public class VoiceCommand : MonoBehaviour
         else if(position == "c2") tempPosition = gridPositions[7];
         else if(position == "c3") tempPosition = gridPositions[8];
 
-        Debug.Log(CalculatePosition(position, relativeObject));
-        Debug.Log(relativeObject);
+        // Debug.Log(CalculatePosition(position, relativeObject));
+        // Debug.Log(relativeObject);
+
+        errorMessageString = "";
+        error = false;
 
         if(targetObject != "")
         {
@@ -710,12 +760,12 @@ public class VoiceCommand : MonoBehaviour
                         else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
                         {
                             Debug.Log(tempTargetObject.name + " already exists in " + position);
-                            ChangeErrorMessageText(tempTargetObject.name + " already exists in " + position);
+                            errorMessageString = tempTargetObject.name + " already exists in " + position;
                         }
                         else 
                         {
                             Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
-                            ChangeErrorMessageText(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                            errorMessageString = CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position;
                         }
                     }
                     if(transform == "remove")
@@ -723,7 +773,7 @@ public class VoiceCommand : MonoBehaviour
                         if(CalculatePosition(position, relativeObject).childCount == 0) 
                         {
                             Debug.Log(position + " does not contain " + targetObject + " to be removed");
-                            ChangeErrorMessageText(position + " does not contain " + targetObject + " to be removed");
+                            errorMessageString = position + " does not contain " + targetObject + " to be removed";
 
                         }
                         else
@@ -749,23 +799,23 @@ public class VoiceCommand : MonoBehaviour
                             else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
                             {
                                 Debug.Log(tempTargetObject.name + " already exists in " + position);
-                                ChangeErrorMessageText(tempTargetObject.name + " already exists in " + position);
+                                errorMessageString = tempTargetObject.name + " already exists in " + position;
                             }
                             else if(!gridPositions.Contains(tempRelativeObject.parent)) 
                             {
                                 Debug.Log(relativeObject + " does not exist in the grid");
-                                ChangeErrorMessageText(relativeObject + " does not exist in the grid");
+                                errorMessageString = relativeObject + " does not exist in the grid";
                             }
                             else 
                             {
                                 Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
-                                ChangeErrorMessageText(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                                errorMessageString = CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position;
                             }
                         }
                         else 
                         {
                             Debug.Log(targetObject + " does not exist in the grid");
-                            ChangeErrorMessageText(targetObject + " does not exist in the grid");
+                            errorMessageString = targetObject + " does not exist in the grid";
                         }
                         
                     }
@@ -783,29 +833,41 @@ public class VoiceCommand : MonoBehaviour
                 else
                 {
                     Debug.Log("Column/Row limit is exceeded or The relative object is in the resting position");
-                    ChangeErrorMessageText("Column/Row limit is exceeded or The relative object is in the resting position");
+                    errorMessageString = "Column/Row limit is exceeded or The relative object is in the resting position";
                 }
             }
             else
             {
                 Debug.Log("The referenced object in use");
-                ChangeErrorMessageText("The referenced object in use");
-
+                errorMessageString = "The referenced object in use";
             }
+        }
+
+        if(errorMessageString != "")
+        {
+            error = true;
         }
     }
 
-    void ChangeErrorMessageText(string message)
+    public void ResetHologram()
     {
-        TextMeshProUGUI errorMessageText = errorMessage.Find("Background/ErrorMessageText").GetComponent<TextMeshProUGUI>();
-        errorMessageText.text = message;
+        // Moving objects to their respective resting positions
+        objectA.SetParent(restingPositionA);
+        objectA.localPosition = Vector3.zero;
+        objectB.SetParent(restingPositionB);
+        objectB.localPosition = Vector3.zero;
+        objectC.SetParent(restingPositionC);
+        objectC.localPosition = Vector3.zero;
+
+        ResetRecognitionResult();
     }
 
     public void ShowErrorMessage()
     {
         AudioSource audioSource = this.GetComponent<AudioSource>();
         errorMessage.gameObject.SetActive(true);
-        audioSource.PlayOneShot(errorSound, 0);
+        errorMessageText.text = errorMessageString;
+        audioSource.PlayOneShot(errorSound);
         Invoke("CloseErrorMessage", 10f);
     }
 
