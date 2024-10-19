@@ -43,12 +43,14 @@ public class VoiceCommand : MonoBehaviour
     public Transform objectA, objectB, objectC;
     public Transform[] gridPositions;
     public Transform restingPositionA, restingPositionB, restingPositionC;
+    public float verticalMargin = 0.5f;
 
     public bool error = false;
     public Transform errorMessage;
     public TextMeshProUGUI errorMessageText;
     string errorMessageString;
     public AudioClip errorSound;
+    Vector3 hologramPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -492,7 +494,7 @@ public class VoiceCommand : MonoBehaviour
         // Position
         if (!isPositionRecognized)
         {
-            if (phrase == "in front of" || phrase == "to the right of" || phrase == "to the left of" || phrase == "behind" || phrase == "a1" || phrase == "a2" || phrase == "a3" || phrase == "b1" || phrase == "b2" || phrase == "b3" || phrase == "c1" || phrase == "c2" || phrase == "c3")
+            if (phrase == "on top of" || phrase == "under" || phrase == "in front of" || phrase == "to the right of" || phrase == "to the left of" || phrase == "behind" || phrase == "a1" || phrase == "a2" || phrase == "a3" || phrase == "b1" || phrase == "b2" || phrase == "b3" || phrase == "c1" || phrase == "c2" || phrase == "c3")
             {
                 parsedPhrasePosition = phrase;
                 isPositionRecognized = true;
@@ -645,6 +647,36 @@ public class VoiceCommand : MonoBehaviour
         return columnObjectToLeft;
     }
 
+    // Insert this before SetParent() the targetObject
+    void CheckAndMoveObjectAbove(Transform targetObject)
+    {
+        if(targetObject.parent.childCount == 2 || targetObject.parent.childCount == 3)
+        {
+            if(targetObject.localPosition.y == 0)
+            {
+                foreach (Transform child in targetObject.parent.GetComponentsInChildren<Transform>())
+                {
+                    // Check if the child is neither transformA nor transformB
+                    if (child != targetObject.parent && child != targetObject)
+                    {
+                        child.localPosition -= new Vector3(0, verticalMargin, 0);
+                    }
+                }
+            }
+            else if(targetObject.localPosition.y == 0.5f)
+            {
+                foreach (Transform child in targetObject.parent.GetComponentsInChildren<Transform>())
+                {
+                    // Check if the child is neither transformA nor transformB
+                    if (child != targetObject.parent && child != targetObject && child.localPosition.y == 1)
+                    {
+                        child.localPosition -= new Vector3(0, verticalMargin, 0);
+                    }
+                }
+            }
+        }
+    }
+
     Transform CalculatePosition(string position, string relativeObject)
     {
         Transform tempPosition = null;
@@ -690,6 +722,17 @@ public class VoiceCommand : MonoBehaviour
                 if(CalculateColumnToLeft(relativeObject) != null)
                 {
                     tempPosition = CalculateColumnToLeft(relativeObject);
+                }
+            }
+            else if(position == "on top of" || position == "under")
+            {
+                Transform tempObject = null;
+                if(relativeObject == "object a") tempObject = objectA;
+                if(relativeObject == "object b") tempObject = objectB;
+                if(relativeObject == "object c") tempObject = objectC;
+                if(gridPositions.Contains(tempObject.parent))
+                {
+                    tempPosition = tempObject.parent;
                 }
             }
             else if(position == "")         // In case of swapping/replacing where there's no position with relative object
@@ -748,63 +791,265 @@ public class VoiceCommand : MonoBehaviour
             {
                 if(CalculatePosition(position, relativeObject) != null)
                 {
-                    if(transform == "put" || transform == "place")
+                    if(transform == "put" || transform == "place" || transform == "move")
                     {
-                        if(CalculatePosition(position, relativeObject).childCount == 0)
+                        if(position == "on top of" || position == "under")
                         {
-                            // Put target object in the position only when the position is not taken by another object
-                            tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
-                            tempTargetObject.localPosition = Vector3.zero;
-                            Debug.Log(targetObject + " was successfully put in " + position);
-                        }
-                        else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
-                        {
-                            Debug.Log(tempTargetObject.name + " already exists in " + position);
-                            errorMessageString = tempTargetObject.name + " already exists in " + position;
-                        }
-                        else 
-                        {
-                            Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
-                            errorMessageString = CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position;
-                        }
-                    }
-                    if(transform == "remove")
-                    {
-                        if(CalculatePosition(position, relativeObject).childCount == 0) 
-                        {
-                            Debug.Log(position + " does not contain " + targetObject + " to be removed");
-                            errorMessageString = position + " does not contain " + targetObject + " to be removed";
+                            if(position == "on top of")
+                            {
+                                if(CalculatePosition(position, relativeObject).childCount == 1)
+                                {
+                                    if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject)
+                                    {
+                                        Debug.Log("The object cannot be put on top of itself");
+                                        errorMessageString = "The object cannot be put on top of itself";
+                                    }
+                                    else
+                                    {
+                                        CheckAndMoveObjectAbove(tempTargetObject);
+                                        tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
+                                        tempTargetObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                        Debug.Log(targetObject + " was successfully put on top of the " + relativeObject);
+                                    }
+                                }
+                                else if(CalculatePosition(position, relativeObject).childCount == 2)
+                                {
+                                    if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject || CalculatePosition(position, relativeObject).GetChild(1) == tempTargetObject)
+                                    {
+                                        if(tempRelativeObject.localPosition.y == 0)
+                                        {
+                                            Debug.Log(targetObject + " already on top of " + relativeObject);
+                                            errorMessageString = targetObject + " already on top of " + relativeObject;
+                                        }
+                                        else
+                                        {
+                                            tempTargetObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                            tempRelativeObject.localPosition = Vector3.zero;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if(tempRelativeObject.localPosition.y == 0)
+                                        {
+                                            CheckAndMoveObjectAbove(tempTargetObject);
+                                            foreach (Transform child in CalculatePosition(position, relativeObject).GetComponentsInChildren<Transform>())
+                                            {
+                                                // Check if the child is neither transformA nor transformB
+                                                if (child != CalculatePosition(position, relativeObject) && child != tempRelativeObject)
+                                                {
+                                                    child.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                                    Debug.Log(child);
+                                                }
+                                            }
+                                            // CalculatePosition(position, relativeObject).localPosition = new Vector3(0, 0, 0.66f);
+                                            
+                                            tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
+                                            tempTargetObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                        }
+                                        else
+                                        {
+                                            CheckAndMoveObjectAbove(tempTargetObject);
+                                            tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
+                                            tempTargetObject.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                        }
+                                        Debug.Log(targetObject + " was successfully put on top of the " + relativeObject);
+                                    }
+                                }
+                                else if(CalculatePosition(position, relativeObject).childCount == 3)
+                                {
+                                    if(tempRelativeObject.localPosition.y == tempTargetObject.localPosition.y - 0.5f)
+                                    {
+                                        Debug.Log(tempTargetObject.name + " already on top of the " + relativeObject);
+                                        errorMessageString = tempTargetObject.name + " already on top of the " + relativeObject;
+                                    }
+                                    else
+                                    {
+                                        if(tempRelativeObject.localPosition.y == 0)
+                                        {
+                                            if(tempTargetObject.localPosition.y == 1)
+                                            {
+                                                tempTargetObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                                foreach (Transform child in CalculatePosition(position, relativeObject).GetComponentsInChildren<Transform>())
+                                                {
+                                                    // Check if the child is neither transformA nor transformB
+                                                    if (child != CalculatePosition(position, relativeObject) && child != tempRelativeObject && child != tempTargetObject)
+                                                    {
+                                                        child.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if(tempRelativeObject.localPosition.y == 0.5f)
+                                        {
+                                            if(tempTargetObject.localPosition.y == 0)
+                                            {
+                                                tempTargetObject.localPosition = new Vector3(0, 2*verticalMargin, 0);
 
+                                                foreach (Transform child in CalculatePosition(position, relativeObject).GetComponentsInChildren<Transform>())
+                                                {
+                                                    // Check if the child is neither transformA nor transformB
+                                                    if (child != CalculatePosition(position, relativeObject) && child != tempRelativeObject && child != tempTargetObject)
+                                                    {
+                                                        child.localPosition = Vector3.zero;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if(tempTargetObject.localPosition.y == 0)
+                                            {
+                                                tempTargetObject.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                                tempRelativeObject.localPosition = new Vector3(0, verticalMargin, 0);
+
+
+                                                foreach (Transform child in CalculatePosition(position, relativeObject).GetComponentsInChildren<Transform>())
+                                                {
+                                                    // Check if the child is neither transformA nor transformB
+                                                    if (child != CalculatePosition(position, relativeObject) && child != tempRelativeObject && child != tempTargetObject)
+                                                    {
+                                                        child.localPosition = Vector3.zero;
+                                                    }
+                                                }
+                                            }
+                                            if(tempTargetObject.localPosition.y == 0.5f)
+                                            {
+                                                tempTargetObject.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                                tempRelativeObject.localPosition = new Vector3(0, verticalMargin, 0);
+
+                                            }
+                                        }
+                                        Debug.Log(targetObject + " was successfully put on top of the " + relativeObject);
+                                    }
+                                }
+                            }
+                            else if(position == "under")
+                            {
+                                if(CalculatePosition(position, relativeObject).childCount == 1)
+                                {
+                                    if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject)
+                                    {
+                                        Debug.Log(tempTargetObject.name + " already exists in " + position);
+                                        errorMessageString = tempTargetObject.name + " already exists in " + position;
+                                    }
+                                    else
+                                    {
+                                        CheckAndMoveObjectAbove(tempTargetObject);
+                                        tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
+                                        tempTargetObject.localPosition = Vector3.zero;
+                                        tempRelativeObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                        Debug.Log(targetObject + " was successfully put under the " + relativeObject);
+                                    }
+                                }
+                                else if(CalculatePosition(position, relativeObject).childCount == 2)
+                                {
+                                    if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject || CalculatePosition(position, relativeObject).GetChild(1) == tempTargetObject)
+                                    {
+                                        if(tempRelativeObject.localPosition.y == 0.5f)
+                                        {
+                                            Debug.Log(targetObject + " already under the " + relativeObject);
+                                            errorMessageString = targetObject + " already under the " + relativeObject;
+                                        }
+                                        else
+                                        {
+                                            tempTargetObject.localPosition = Vector3.zero;
+                                            tempRelativeObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if(tempRelativeObject.localPosition.y == 0)
+                                        {
+                                            CheckAndMoveObjectAbove(tempTargetObject);
+                                            CalculatePosition(position, relativeObject).GetChild(0).localPosition += new Vector3(0, verticalMargin, 0);
+                                            CalculatePosition(position, relativeObject).GetChild(1).localPosition += new Vector3(0, verticalMargin, 0);
+                                            tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
+                                            tempTargetObject.localPosition = Vector3.zero;
+                                        }
+                                        else
+                                        {
+                                            CheckAndMoveObjectAbove(tempTargetObject);
+                                            tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
+                                            tempTargetObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                            tempRelativeObject.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                        }
+                                        Debug.Log(targetObject + " was successfully put under the " + relativeObject);
+                                    }
+                                }
+                                else if(CalculatePosition(position, relativeObject).childCount == 3)
+                                {
+                                    if(tempRelativeObject.localPosition.y == tempTargetObject.localPosition.y + 0.5f)
+                                    {
+                                        Debug.Log(tempTargetObject.name + " already under the " + relativeObject);
+                                        errorMessageString = tempTargetObject.name + " already under the " + relativeObject;
+                                    }
+                                    else
+                                    {
+                                        if(tempRelativeObject.localPosition.y == 0)
+                                        {
+                                            if(tempTargetObject.localPosition.y == 0.5f)
+                                            {
+                                                tempTargetObject.localPosition = Vector3.zero;
+                                                tempRelativeObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                            }
+                                            else if(tempTargetObject.localPosition.y == 1)
+                                            {
+                                                tempTargetObject.localPosition = Vector3.zero;
+                                                tempRelativeObject.localPosition = new Vector3(0, verticalMargin, 0);
+
+                                                foreach (Transform child in CalculatePosition(position, relativeObject).GetComponentsInChildren<Transform>())
+                                                {
+                                                    // Check if the child is neither transformA nor transformB
+                                                    if (child != CalculatePosition(position, relativeObject) && child != tempRelativeObject && child != tempTargetObject)
+                                                    {
+                                                        child.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else if(tempRelativeObject.localPosition.y == 0.5f)
+                                        {
+                                            if(tempTargetObject.localPosition.y == 1)
+                                            {
+                                                tempTargetObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                                tempRelativeObject.localPosition = new Vector3(0, 2*verticalMargin, 0);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if(tempTargetObject.localPosition.y == 0f)
+                                            {
+                                                tempTargetObject.localPosition = new Vector3(0, verticalMargin, 0);
+                                                
+                                                foreach (Transform child in CalculatePosition(position, relativeObject).GetComponentsInChildren<Transform>())
+                                                {
+                                                    // Check if the child is neither transformA nor transformB
+                                                    if (child != CalculatePosition(position, relativeObject) && child != tempRelativeObject && child != tempTargetObject)
+                                                    {
+                                                        child.localPosition = Vector3.zero;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        Debug.Log(targetObject + " was successfully put under the " + relativeObject);
+                                    }
+                                }
+                            }
                         }
                         else
                         {
-                            // Put target object in the position only when the position is not taken by another object
-                            tempTargetObject.SetParent(CalculateResetPosition(targetObject));
-                            tempTargetObject.localPosition = Vector3.zero;
-                            Debug.Log(targetObject + " was successfully removed");
-                        }
-                    }
-                    if(transform == "move")
-                    {
-                        // if target object exists in grid
-                        if(gridPositions.Contains(tempTargetObject.parent))
-                        {
                             if(CalculatePosition(position, relativeObject).childCount == 0)
                             {
+                                CheckAndMoveObjectAbove(tempTargetObject);
                                 // Put target object in the position only when the position is not taken by another object
                                 tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
                                 tempTargetObject.localPosition = Vector3.zero;
-                                Debug.Log(targetObject + " was successfully moved to " + position);
+                                Debug.Log(targetObject + " was successfully put in " + position);
                             }
                             else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
                             {
                                 Debug.Log(tempTargetObject.name + " already exists in " + position);
                                 errorMessageString = tempTargetObject.name + " already exists in " + position;
-                            }
-                            else if(!gridPositions.Contains(tempRelativeObject.parent)) 
-                            {
-                                Debug.Log(relativeObject + " does not exist in the grid");
-                                errorMessageString = relativeObject + " does not exist in the grid";
                             }
                             else 
                             {
@@ -812,21 +1057,70 @@ public class VoiceCommand : MonoBehaviour
                                 errorMessageString = CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position;
                             }
                         }
-                        else 
-                        {
-                            Debug.Log(targetObject + " does not exist in the grid");
-                            errorMessageString = targetObject + " does not exist in the grid";
-                        }
-                        
                     }
+                    if(transform == "remove")
+                    {
+                        if(!CalculatePosition(position, relativeObject).GetComponentsInChildren<Transform>().Contains(tempTargetObject)) 
+                        {
+                            Debug.Log(position + " does not contain " + targetObject + " to be removed");
+                            errorMessageString = position + " does not contain " + targetObject + " to be removed";
+
+                        }
+                        else
+                        {
+                            CheckAndMoveObjectAbove(tempTargetObject);
+                            // Put target object in the position only when the position is not taken by another object
+                            tempTargetObject.SetParent(CalculateResetPosition(targetObject));
+                            tempTargetObject.localPosition = Vector3.zero;
+                            Debug.Log(targetObject + " was successfully removed");
+                        }
+                    }
+                    // if(transform == "move")
+                    // {
+                    //     // if target object exists in grid
+                    //     if(gridPositions.Contains(tempTargetObject.parent))
+                    //     {
+                    //         if(CalculatePosition(position, relativeObject).childCount == 0)
+                    //         {
+                    //             CheckAndMoveObjectAbove(tempTargetObject);
+                    //             // Put target object in the position only when the position is not taken by another object
+                    //             tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
+                    //             tempTargetObject.localPosition = Vector3.zero;
+                    //             Debug.Log(targetObject + " was successfully moved to " + position);
+                    //         }
+                    //         else if(CalculatePosition(position, relativeObject).GetChild(0) == tempTargetObject) 
+                    //         {
+                    //             Debug.Log(targetObject + " already exists in " + position);
+                    //             errorMessageString = targetObject + " already exists in " + position;
+                    //         }
+                    //         else if(!gridPositions.Contains(tempRelativeObject.parent)) 
+                    //         {
+                    //             Debug.Log(relativeObject + " does not exist in the grid");
+                    //             errorMessageString = relativeObject + " does not exist in the grid";
+                    //         }
+                    //         else 
+                    //         {
+                    //             Debug.Log(CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position);
+                    //             errorMessageString = CalculatePosition(position, relativeObject).GetChild(0).name + " already exists in " + position;
+                    //         }
+                    //     }
+                    //     else 
+                    //     {
+                    //         Debug.Log(targetObject + " does not exist in the grid");
+                    //         errorMessageString = targetObject + " does not exist in the grid";
+                    //     }
+                    // }
                     if(transform == "replace" || transform == "swap")
                     {
                         // Store the parent object of tempTargetObject before changing the parent of tempTargetObject
                         Transform tempTargetObjectsParent = tempTargetObject.parent;
+                        // The following two lines are required in order to store the vertical information of swapping objects
+                        float tempTargetObjectY = tempTargetObject.localPosition.y;
+                        float tempRelativeObjectY = tempRelativeObject.localPosition.y;
                         tempTargetObject.SetParent(CalculatePosition(position, relativeObject));
-                        tempTargetObject.localPosition = Vector3.zero;
+                        tempTargetObject.localPosition = new Vector3(0, tempRelativeObjectY, 0);
                         tempRelativeObject.SetParent(tempTargetObjectsParent);
-                        tempRelativeObject.localPosition = Vector3.zero;
+                        tempRelativeObject.localPosition = new Vector3(0, tempTargetObjectY, 0);
                         Debug.Log(targetObject + " was successfully replaced/swapped with " + relativeObject);
                     }
                 }
@@ -874,5 +1168,19 @@ public class VoiceCommand : MonoBehaviour
     void CloseErrorMessage()
     {
         errorMessage.gameObject.SetActive(false);
+    }
+
+    public void EnableTextMode()
+    {
+        GameObject grid = GameObject.Find("Grid");
+        hologramPosition = grid.transform.position;
+
+        grid.transform.position = new Vector3(1000, 1000, 1000);
+    }
+
+    public void EnableHologram()
+    {
+        GameObject grid = GameObject.Find("Grid");
+        grid.transform.position = hologramPosition;
     }
 }
