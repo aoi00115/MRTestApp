@@ -4639,6 +4639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableDebugMode: 0
   isRecognized: 0
+  executionTime: 0
   debugTexts:
   - {fileID: 1331254885}
   - {fileID: 1257113983}
