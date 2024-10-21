@@ -16,6 +16,9 @@ public class VoiceCommand : MonoBehaviour
     // Setting the enableDebugMode allows it to simulate the DictationSubsystem_Recognizing and DictationSubsystem_Recognized function in DictationHandlerScript
     public bool enableDebugMode = false;
     public bool isRecognized = false;
+    bool isTimeLogging = false;
+    float timer;
+    public float executionTime;
 
     public TextMeshProUGUI[] debugTexts;
     public TextMeshProUGUI recognizedSentence;
@@ -67,7 +70,7 @@ public class VoiceCommand : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.X))
+        if(Input.GetKeyDown(KeyCode.X) && enableDebugMode)
         {
             if(isRecognized)
             {
@@ -87,7 +90,25 @@ public class VoiceCommand : MonoBehaviour
                 {
                     ShowErrorMessage();
                 }
+                isTimeLogging = true;
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            if(isTimeLogging)
+            {
+                isTimeLogging = false;
+            
+                // Resetting all parameters for the next transcription
+                executionTime = timer;
+                timer = 0;
+            }
+        }
+
+        if(isTimeLogging)
+        {
+            timer += Time.deltaTime;
         }
 
         if(objectA.parent != restingPositionA || objectB.parent != restingPositionB || objectB.parent != restingPositionB)
@@ -407,13 +428,16 @@ public class VoiceCommand : MonoBehaviour
             // Do the following when recognized and there's any change in recognized phrases
             ManipulateHologram(parsedPhraseTransform, parsedPhraseTargetObject, parsedPhrasePosition, parsedPhraseRelativeObject);
         }
-        else if(recognitionState == "recognized")
+        
+        if(recognitionState == "recognized")
         {
             // Reset the whenRecognizing string regardless after being recognized
             transformWhenRecognizing = "";
             targetObjectWhenRecognizing = "";
             positionWhenRecognizing = "";
             relativeObjectWhenRecognizing = "";
+
+            isTimeLogging = true;
         }
     }
 
