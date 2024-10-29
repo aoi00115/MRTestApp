@@ -15,6 +15,8 @@ public class VoiceCommand : MonoBehaviour
 {
     // Setting the enableDebugMode allows it to simulate the DictationSubsystem_Recognizing and DictationSubsystem_Recognized function in DictationHandlerScript
     public bool enableDebugMode = false;
+    public enum RecognitionStates {Default, Recognizing, Recognized};
+    public RecognitionStates recognitionState;
     public bool isRecognized = false;
     bool isTimeLogging = false;
     float timer;
@@ -72,25 +74,48 @@ public class VoiceCommand : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.X) && enableDebugMode)
         {
-            if(isRecognized)
-            {
-                isRecognized = false;
+            // if(isRecognized)
+            // {
+            //     isRecognized = false;
             
-                // Resetting all parameters for the next transcription
-                ResetRecognitionResult();
-            }
-            else
-            {
-                isRecognized = true;
+            //     // Resetting all parameters for the next transcription
+            //     ResetRecognitionResult();
+            // }
+            // else
+            // {
+            //     isRecognized = true;
 
-                // Parsing words and showing the recognition result
+            //     // Parsing words and showing the recognition result
+            //     ResetRecognitionResult();
+            //     ShowRecognitionResult("recognizing");
+            //     if(error)
+            //     {
+            //         ShowErrorMessage();
+            //     }
+            //     isTimeLogging = true;
+            // }
+
+            if(recognitionState == RecognitionStates.Default)
+            {
+                recognitionState = RecognitionStates.Recognizing;
+
                 ResetRecognitionResult();
                 ShowRecognitionResult("recognizing");
-                if(error)
+            }
+            else if(recognitionState == RecognitionStates.Recognizing)
+            {
+                recognitionState = RecognitionStates.Recognized;
+
+                ResetRecognitionResult();
+                ShowRecognitionResult("recognized");
+                if(error == true)
                 {
                     ShowErrorMessage();
                 }
-                isTimeLogging = true;
+            }
+            else if(recognitionState == RecognitionStates.Recognized)
+            {
+                recognitionState = RecognitionStates.Default;
             }
         }
 

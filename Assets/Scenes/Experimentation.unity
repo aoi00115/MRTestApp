@@ -4639,6 +4639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableDebugMode: 0
+  recognitionState: 0
   isRecognized: 0
   executionTime: 0
   debugTexts:
