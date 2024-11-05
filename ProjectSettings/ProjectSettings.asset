@@ -705,8 +705,8 @@ PlayerSettings:
     WindowsStoreApps:
       GazeInput: True
       SpatialPerception: True
-      InternetClient: True
-      WebCam: True
+      InternetClient: False
+      WebCam: False
       Microphone: True
   metroTargetDeviceFamilies: {}
   metroFTAName: 

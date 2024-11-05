@@ -4,6 +4,7 @@
 // Disable "missing XML comment" warning for samples. While nice to have, this XML documentation is not required for samples.
 #pragma warning disable CS1591
 
+using TMPro;
 using MixedReality.Toolkit.Subsystems;
 using UnityEngine;
 using UnityEngine.Events;
@@ -50,6 +51,7 @@ namespace MixedReality.Toolkit.Examples.Demos
         private IDictationSubsystem dictationSubsystem = null;
         private IKeywordRecognitionSubsystem keywordRecognitionSubsystem = null;
 
+        public TextMeshProUGUI statusText;
         public VoiceCommand voiceCommand;
 
         /// <summary>
@@ -106,10 +108,12 @@ namespace MixedReality.Toolkit.Examples.Demos
             // Resetting and showing the recognition result
             voiceCommand.ResetRecognitionResult();
             voiceCommand.ShowRecognitionResult("recognized");
+            statusText.text = "Status : Recognized";
             if(voiceCommand.error == true)
             {
                 voiceCommand.ShowErrorMessage();
             }
+            voiceCommand.isTimeLogging = true;
         }
 
         private void DictationSubsystem_Recognizing(DictationResultEventArgs obj)
@@ -119,6 +123,7 @@ namespace MixedReality.Toolkit.Examples.Demos
             // Resetting and showing the recognition result
             voiceCommand.ResetRecognitionResult();
             voiceCommand.ShowRecognitionResult("recognizing");
+            statusText.text = "Status : Recognizing...";
         }
 
         /// <summary>
