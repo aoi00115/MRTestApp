@@ -166,28 +166,6 @@ public class VoiceCommand : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                if(startRecognitionButton.activeSelf)
-                {
-                    dictationHandler.StartRecognition();
-                    startRecognitionButton.SetActive(false);
-                    stopRecognitionButton.SetActive(true);
-                    audioSource.PlayOneShot(startSound);
-                }
-                else if(stopRecognitionButton.activeSelf && !isTimeLogging)
-                {
-                    dictationHandler.StopRecognition();
-                    startRecognitionButton.SetActive(true);
-                    stopRecognitionButton.SetActive(false);
-                    audioSource.PlayOneShot(stopSound);
-                }
-                else if(stopRecognitionButton.activeSelf && isTimeLogging)
-                {
-                    audioSource.PlayOneShot(errorSound);
-                }
-            }
-
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.RightShift)) && Input.GetKey(KeyCode.Alpha1))
             {
                 experimentMode = ExperimentMode.Hologram;
@@ -282,13 +260,27 @@ public class VoiceCommand : MonoBehaviour
                 restingPositionC = holographicRestingPositionC;
             }
 
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                if (startRecognitionButton.activeSelf)
+                {
+                    dictationHandler.StartRecognition();
+                    startRecognitionButton.SetActive(false);
+                    stopRecognitionButton.SetActive(true);
+                    audioSource.PlayOneShot(startSound);
+                }
+            }
+
             if (Input.GetKeyDown(KeyCode.T))
             {
-                if (isTimeLogging)
+                if (stopRecognitionButton.activeSelf && isTimeLogging)
                 {
-                    isTimeLogging = false;
-                    audioSource.PlayOneShot(timerSound);
+                    dictationHandler.StopRecognition();
+                    startRecognitionButton.SetActive(true);
+                    stopRecognitionButton.SetActive(false);
+                    audioSource.PlayOneShot(stopSound);
 
+                    isTimeLogging = false;
                     // Resetting all parameters for the next transcription
                     executionTime = timer;
                     timer = 0;
