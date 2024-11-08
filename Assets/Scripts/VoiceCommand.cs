@@ -74,6 +74,7 @@ public class VoiceCommand : MonoBehaviour
     public AudioClip timerSound;
     public AudioSource audioSource;
     public DictationHandler dictationHandler;
+    public CSVWriter csvWriter;
 
     // Start is called before the first frame update
     void Start()
@@ -236,6 +237,7 @@ public class VoiceCommand : MonoBehaviour
                 restingPositionB = holographicRestingPositionB;
                 restingPositionC = holographicRestingPositionC;
             }
+
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.RightShift)) && Input.GetKey(KeyCode.Alpha4))
             {
                 experimentMode = ExperimentMode.TextRef;
@@ -284,6 +286,9 @@ public class VoiceCommand : MonoBehaviour
                     // Resetting all parameters for the next transcription
                     executionTime = timer;
                     timer = 0;
+
+                    // Writing subjectName, experimentMode, processedSentence, executionTime into CSV file
+                    csvWriter.WriteData(subjectName.text, experimentMode.ToString(), processedSentence, executionTime);
                 }
             }
         }
