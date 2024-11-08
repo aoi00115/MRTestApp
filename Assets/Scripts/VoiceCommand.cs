@@ -54,14 +54,14 @@ public class VoiceCommand : MonoBehaviour
     string positionWhenRecognizing = "";
     string relativeObjectWhenRecognizing = "";
 
-    public Transform grid, objectA, objectB, objectC;
-    public Transform arrow, arObjectA, arObjectB, arObjectC;
+    public Transform grid, object1, object2, object3;
+    public Transform arrow, arObject1, arObject2, arObject3;
     public Transform[] holographicGridPositions;
     public Transform[] arGridPositions;
     private Transform[] gridPositions;
-    public Transform holographicRestingPositionA, holographicRestingPositionB, holographicRestingPositionC;
-    public Transform arRestingPositionA, arRestingPositionB, arRestingPositionC;
-    private Transform restingPositionA, restingPositionB, restingPositionC;
+    public Transform holographicRestingPosition1, holographicRestingPosition2, holographicRestingPosition3;
+    public Transform arRestingPosition1, arRestingPosition2, arRestingPosition3;
+    private Transform restingPosition1, restingPosition2, restingPosition3;
     public float verticalMargin = 0.5f;
 
     public bool error = false;
@@ -90,17 +90,17 @@ public class VoiceCommand : MonoBehaviour
             gridPositions[i] = holographicGridPositions[i];
         }
 
-        restingPositionA = holographicRestingPositionA;
-        restingPositionB = holographicRestingPositionB;
-        restingPositionC = holographicRestingPositionC;
+        restingPosition1 = holographicRestingPosition1;
+        restingPosition2 = holographicRestingPosition2;
+        restingPosition3 = holographicRestingPosition3;
 
         // Moving objects to their respective resting positions
-        objectA.SetParent(restingPositionA);
-        objectA.localPosition = Vector3.zero;
-        objectB.SetParent(restingPositionB);
-        objectB.localPosition = Vector3.zero;
-        objectC.SetParent(restingPositionC);
-        objectC.localPosition = Vector3.zero;
+        object1.SetParent(restingPosition1);
+        object1.localPosition = Vector3.zero;
+        object2.SetParent(restingPosition2);
+        object2.localPosition = Vector3.zero;
+        object3.SetParent(restingPosition3);
+        object3.localPosition = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -174,9 +174,9 @@ public class VoiceCommand : MonoBehaviour
                 recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, 4);
 
                 grid.GetComponent<MeshRenderer>().enabled = true;
-                objectA.GetComponent<MeshRenderer>().enabled = true;
-                objectB.GetComponent<MeshRenderer>().enabled = true;
-                objectC.GetComponent<MeshRenderer>().enabled = true;
+                object1.GetComponent<MeshRenderer>().enabled = true;
+                object2.GetComponent<MeshRenderer>().enabled = true;
+                object3.GetComponent<MeshRenderer>().enabled = true;
 
                 gridPositions = new Transform[holographicGridPositions.Length];
 
@@ -186,9 +186,9 @@ public class VoiceCommand : MonoBehaviour
                     gridPositions[i] = holographicGridPositions[i];
                 }
 
-                restingPositionA = holographicRestingPositionA;
-                restingPositionB = holographicRestingPositionB;
-                restingPositionC = holographicRestingPositionC;
+                restingPosition1 = holographicRestingPosition1;
+                restingPosition2 = holographicRestingPosition2;
+                restingPosition3 = holographicRestingPosition3;
             }
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.RightShift)) && Input.GetKey(KeyCode.Alpha2))
             {
@@ -198,9 +198,9 @@ public class VoiceCommand : MonoBehaviour
 
 
                 grid.GetComponent<MeshRenderer>().enabled = false;
-                objectA.GetComponent<MeshRenderer>().enabled = false;
-                objectB.GetComponent<MeshRenderer>().enabled = false;
-                objectC.GetComponent<MeshRenderer>().enabled = false;
+                object1.GetComponent<MeshRenderer>().enabled = false;
+                object2.GetComponent<MeshRenderer>().enabled = false;
+                object3.GetComponent<MeshRenderer>().enabled = false;
 
                 gridPositions = new Transform[holographicGridPositions.Length];
 
@@ -210,9 +210,9 @@ public class VoiceCommand : MonoBehaviour
                     gridPositions[i] = holographicGridPositions[i];
                 }
 
-                restingPositionA = holographicRestingPositionA;
-                restingPositionB = holographicRestingPositionB;
-                restingPositionC = holographicRestingPositionC;
+                restingPosition1 = holographicRestingPosition1;
+                restingPosition2 = holographicRestingPosition2;
+                restingPosition3 = holographicRestingPosition3;
             }
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.RightShift)) && Input.GetKey(KeyCode.Alpha3))
             {
@@ -221,9 +221,9 @@ public class VoiceCommand : MonoBehaviour
                 recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, 4);
 
                 grid.GetComponent<MeshRenderer>().enabled = true;
-                objectA.GetComponent<MeshRenderer>().enabled = true;
-                objectB.GetComponent<MeshRenderer>().enabled = true;
-                objectC.GetComponent<MeshRenderer>().enabled = true;
+                object1.GetComponent<MeshRenderer>().enabled = true;
+                object2.GetComponent<MeshRenderer>().enabled = true;
+                object3.GetComponent<MeshRenderer>().enabled = true;
 
                 gridPositions = new Transform[holographicGridPositions.Length];
 
@@ -233,9 +233,9 @@ public class VoiceCommand : MonoBehaviour
                     gridPositions[i] = holographicGridPositions[i];
                 }
 
-                restingPositionA = holographicRestingPositionA;
-                restingPositionB = holographicRestingPositionB;
-                restingPositionC = holographicRestingPositionC;
+                restingPosition1 = holographicRestingPosition1;
+                restingPosition2 = holographicRestingPosition2;
+                restingPosition3 = holographicRestingPosition3;
             }
 
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.RightShift)) && Input.GetKey(KeyCode.Alpha4))
@@ -245,9 +245,9 @@ public class VoiceCommand : MonoBehaviour
                 recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, -4);
 
                 grid.GetComponent<MeshRenderer>().enabled = false;
-                objectA.GetComponent<MeshRenderer>().enabled = false;
-                objectB.GetComponent<MeshRenderer>().enabled = false;
-                objectC.GetComponent<MeshRenderer>().enabled = false;
+                object1.GetComponent<MeshRenderer>().enabled = false;
+                object2.GetComponent<MeshRenderer>().enabled = false;
+                object3.GetComponent<MeshRenderer>().enabled = false;
 
                 gridPositions = new Transform[holographicGridPositions.Length];
 
@@ -257,9 +257,9 @@ public class VoiceCommand : MonoBehaviour
                     gridPositions[i] = holographicGridPositions[i];
                 }
 
-                restingPositionA = holographicRestingPositionA;
-                restingPositionB = holographicRestingPositionB;
-                restingPositionC = holographicRestingPositionC;
+                restingPosition1 = holographicRestingPosition1;
+                restingPosition2 = holographicRestingPosition2;
+                restingPosition3 = holographicRestingPosition3;
             }
 
             if (Input.GetKeyDown(KeyCode.S))
@@ -298,14 +298,14 @@ public class VoiceCommand : MonoBehaviour
             timer += Time.deltaTime;
         }
 
-        if (objectA.parent != restingPositionA || objectB.parent != restingPositionB || objectC.parent != restingPositionC)
+        if (object1.parent != restingPosition1 || object2.parent != restingPosition2 || object3.parent != restingPosition3)
         {
             Transform space = transform.Find("../Space");
             Transform resetHologramButton = transform.Find("../ResetHologramButton");
             space.gameObject.SetActive(true);
             resetHologramButton.gameObject.SetActive(true);
         }
-        else if (objectA.parent == restingPositionA || objectB.parent == restingPositionB || objectC.parent == restingPositionC)
+        else if (object1.parent == restingPosition1 || object2.parent == restingPosition2 || object3.parent == restingPosition3)
         {
             Transform space = transform.Find("../Space");
             Transform resetHologramButton = transform.Find("../ResetHologramButton");
@@ -667,7 +667,7 @@ public class VoiceCommand : MonoBehaviour
         // Target Object
         if (!isTargetObjectRecognized)
         {
-            if (word == "object a" || word == "object b" || word == "object c" || word == "everything")
+            if (word == triggerObjectPhrases[0] || word == triggerObjectPhrases[1] || word == triggerObjectPhrases[2] || word == triggerObjectPhrases[3])
             {
                 parsedPhraseTargetObject = word;
                 isTargetObjectRecognized = true;
@@ -678,7 +678,7 @@ public class VoiceCommand : MonoBehaviour
         // Relative Object
         if (!isRelativeObjectRecognized && isTargetObjectRecognized && parsedPhraseTargetObject != word)
         {
-            if (word == "object a" || word == "object b" || word == "object c")
+            if (word == triggerObjectPhrases[0] || word == triggerObjectPhrases[1] || word == triggerObjectPhrases[2])
             {
                 // Set parsedPhraseRelativeObject only if the sentence contains parsedPhrasePosition and the parsedPhraseRelativeObject is not parsedPhraseTargetObject itself
                 parsedPhraseRelativeObject = word;
@@ -717,9 +717,9 @@ public class VoiceCommand : MonoBehaviour
     Transform CalculateRowInFront(string relativeObject)
     {
         Transform tempObject = null;
-        if (relativeObject == "object a") tempObject = objectA;
-        if (relativeObject == "object b") tempObject = objectB;
-        if (relativeObject == "object c") tempObject = objectC;
+        if (relativeObject == triggerObjectPhrases[0]) tempObject = object1;
+        if (relativeObject == triggerObjectPhrases[1]) tempObject = object2;
+        if (relativeObject == triggerObjectPhrases[2]) tempObject = object3;
         string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
@@ -753,9 +753,9 @@ public class VoiceCommand : MonoBehaviour
     Transform CalculateRowBehind(string relativeObject)
     {
         Transform tempObject = null;
-        if (relativeObject == "object a") tempObject = objectA;
-        if (relativeObject == "object b") tempObject = objectB;
-        if (relativeObject == "object c") tempObject = objectC;
+        if (relativeObject == triggerObjectPhrases[0]) tempObject = object1;
+        if (relativeObject == triggerObjectPhrases[1]) tempObject = object2;
+        if (relativeObject == triggerObjectPhrases[2]) tempObject = object3;
         string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
@@ -789,9 +789,9 @@ public class VoiceCommand : MonoBehaviour
     Transform CalculateColumnToRight(string relativeObject)
     {
         Transform tempObject = null;
-        if (relativeObject == "object a") tempObject = objectA;
-        if (relativeObject == "object b") tempObject = objectB;
-        if (relativeObject == "object c") tempObject = objectC;
+        if (relativeObject == triggerObjectPhrases[0]) tempObject = object1;
+        if (relativeObject == triggerObjectPhrases[1]) tempObject = object2;
+        if (relativeObject == triggerObjectPhrases[2]) tempObject = object3;
         string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
@@ -825,9 +825,9 @@ public class VoiceCommand : MonoBehaviour
     Transform CalculateColumnToLeft(string relativeObject)
     {
         Transform tempObject = null;
-        if (relativeObject == "object a") tempObject = objectA;
-        if (relativeObject == "object b") tempObject = objectB;
-        if (relativeObject == "object c") tempObject = objectC;
+        if (relativeObject == triggerObjectPhrases[0]) tempObject = object1;
+        if (relativeObject == triggerObjectPhrases[1]) tempObject = object2;
+        if (relativeObject == triggerObjectPhrases[2]) tempObject = object3;
         string objectPosition = tempObject.parent.name;      // ex) objectPosition : A2
         string row = objectPosition.Substring(0, 1);              // ex) row : A
         string column = objectPosition.Substring(1, 1);           // ex) column : 2                  Substring extract the character
@@ -938,9 +938,9 @@ public class VoiceCommand : MonoBehaviour
             else if (position == "on top of" || position == "under")
             {
                 Transform tempObject = null;
-                if (relativeObject == "object a") tempObject = objectA;
-                if (relativeObject == "object b") tempObject = objectB;
-                if (relativeObject == "object c") tempObject = objectC;
+                if (relativeObject == triggerObjectPhrases[0]) tempObject = object1;
+                if (relativeObject == triggerObjectPhrases[1]) tempObject = object2;
+                if (relativeObject == triggerObjectPhrases[2]) tempObject = object3;
                 if (gridPositions.Contains(tempObject.parent))
                 {
                     tempPosition = tempObject.parent;
@@ -949,9 +949,9 @@ public class VoiceCommand : MonoBehaviour
             else if (position == "")         // In case of swapping/replacing where there's no position with relative object
             {
                 Transform tempObject = null;
-                if (relativeObject == "object a") tempObject = objectA;
-                if (relativeObject == "object b") tempObject = objectB;
-                if (relativeObject == "object c") tempObject = objectC;
+                if (relativeObject == triggerObjectPhrases[0]) tempObject = object1;
+                if (relativeObject == triggerObjectPhrases[1]) tempObject = object2;
+                if (relativeObject == triggerObjectPhrases[2]) tempObject = object3;
                 tempPosition = tempObject.parent;
             }
         }
@@ -962,9 +962,9 @@ public class VoiceCommand : MonoBehaviour
     Transform CalculateResetPosition(string targetObject)
     {
         Transform tempPosition = null;
-        if (targetObject == "object a") tempPosition = restingPositionA;
-        if (targetObject == "object b") tempPosition = restingPositionB;
-        if (targetObject == "object c") tempPosition = restingPositionC;
+        if (targetObject == triggerObjectPhrases[0]) tempPosition = restingPosition1;
+        if (targetObject == triggerObjectPhrases[1]) tempPosition = restingPosition2;
+        if (targetObject == triggerObjectPhrases[2]) tempPosition = restingPosition3;
 
         return tempPosition;
     }
@@ -972,13 +972,13 @@ public class VoiceCommand : MonoBehaviour
     void ManipulateHologram(string transform, string targetObject, string position, string relativeObject)
     {
         Transform tempTargetObject = null;
-        if (targetObject == "object a") tempTargetObject = objectA;
-        else if (targetObject == "object b") tempTargetObject = objectB;
-        else if (targetObject == "object c") tempTargetObject = objectC;
+        if (targetObject == triggerObjectPhrases[0]) tempTargetObject = object1;
+        else if (targetObject == triggerObjectPhrases[1]) tempTargetObject = object2;
+        else if (targetObject == triggerObjectPhrases[2]) tempTargetObject = object3;
         Transform tempRelativeObject = null;
-        if (relativeObject == "object a") tempRelativeObject = objectA;
-        else if (relativeObject == "object b") tempRelativeObject = objectB;
-        else if (relativeObject == "object c") tempRelativeObject = objectC;
+        if (relativeObject == triggerObjectPhrases[0]) tempRelativeObject = object1;
+        else if (relativeObject == triggerObjectPhrases[1]) tempRelativeObject = object2;
+        else if (relativeObject == triggerObjectPhrases[2]) tempRelativeObject = object3;
         Transform tempPosition = null;
         if (position == "a1") tempPosition = gridPositions[0];
         else if (position == "a2") tempPosition = gridPositions[1];
@@ -1324,21 +1324,21 @@ public class VoiceCommand : MonoBehaviour
                     {
                         if(targetObject == "everything")
                         {
-                            objectA.SetParent(restingPositionA);
-                            objectA.localPosition = Vector3.zero;
-                            objectB.SetParent(restingPositionB);
-                            objectB.localPosition = Vector3.zero;
-                            objectC.SetParent(restingPositionC);
-                            objectC.localPosition = Vector3.zero;
+                            object1.SetParent(restingPosition1);
+                            object1.localPosition = Vector3.zero;
+                            object2.SetParent(restingPosition2);
+                            object2.localPosition = Vector3.zero;
+                            object3.SetParent(restingPosition3);
+                            object3.localPosition = Vector3.zero;
 
                             Debug.Log("Everything was successfully removed");
                         }
-                        else if (tempTargetObject.parent == restingPositionA || tempTargetObject.parent == restingPositionB || tempTargetObject.parent == restingPositionC)
+                        else if (tempTargetObject.parent == restingPosition1 || tempTargetObject.parent == restingPosition2 || tempTargetObject.parent == restingPosition3)
                         {
                             Debug.Log(targetObject + " is already in the resting position.");
                             errorMessageString = targetObject + " is already in the resting position.";
                         }
-                        else if (tempTargetObject.parent != restingPositionA || tempTargetObject.parent != restingPositionB || tempTargetObject.parent != restingPositionC)
+                        else if (tempTargetObject.parent != restingPosition1 || tempTargetObject.parent != restingPosition2 || tempTargetObject.parent != restingPosition3)
                         {
                             CheckAndMoveObjectAbove(tempTargetObject);
                             // Put target object in the position only when the position is not taken by another object
@@ -1350,7 +1350,7 @@ public class VoiceCommand : MonoBehaviour
                     }
                     else if (transform == "topple" || transform == "tip over")
                     {
-                        if (tempTargetObject.parent == restingPositionA || tempTargetObject.parent == restingPositionB || tempTargetObject.parent == restingPositionC)
+                        if (tempTargetObject.parent == restingPosition1 || tempTargetObject.parent == restingPosition2 || tempTargetObject.parent == restingPosition3)
                         {
                             Debug.Log(targetObject + " is already in the resting position.");
                             errorMessageString = targetObject + " is already in the resting position.";
@@ -1393,12 +1393,12 @@ public class VoiceCommand : MonoBehaviour
     public void ResetHologram()
     {
         // Moving objects to their respective resting positions
-        objectA.SetParent(restingPositionA);
-        objectA.localPosition = Vector3.zero;
-        objectB.SetParent(restingPositionB);
-        objectB.localPosition = Vector3.zero;
-        objectC.SetParent(restingPositionC);
-        objectC.localPosition = Vector3.zero;
+        object1.SetParent(restingPosition1);
+        object1.localPosition = Vector3.zero;
+        object2.SetParent(restingPosition2);
+        object2.localPosition = Vector3.zero;
+        object3.SetParent(restingPosition3);
+        object3.localPosition = Vector3.zero;
 
         ResetRecognitionResult();
     }
