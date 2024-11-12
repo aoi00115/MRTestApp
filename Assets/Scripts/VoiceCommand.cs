@@ -26,6 +26,7 @@ public class VoiceCommand : MonoBehaviour
     public TextMeshProUGUI modeText;
     public TextMeshProUGUI subjectName;
     public TMP_InputField subjectNameInputField;
+    public GameObject referenceCanvas;
     public bool isTimeLogging = false;
     float timer;
     public float executionTime;
@@ -81,6 +82,7 @@ public class VoiceCommand : MonoBehaviour
     {
         experimentMode = ExperimentMode.Hologram;
         recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, 4);
+        referenceCanvas.SetActive(false);
 
         gridPositions = new Transform[holographicGridPositions.Length];
 
@@ -172,6 +174,7 @@ public class VoiceCommand : MonoBehaviour
                 experimentMode = ExperimentMode.Hologram;
                 modeText.text = "Hologram Mode";
                 recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, 4);
+                referenceCanvas.SetActive(false);
 
                 grid.GetComponent<MeshRenderer>().enabled = true;
                 object1.GetComponent<MeshRenderer>().enabled = true;
@@ -195,7 +198,7 @@ public class VoiceCommand : MonoBehaviour
                 experimentMode = ExperimentMode.Text;
                 modeText.text = "Text Mode";
                 recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, -4);
-
+                referenceCanvas.SetActive(false);
 
                 grid.GetComponent<MeshRenderer>().enabled = false;
                 object1.GetComponent<MeshRenderer>().enabled = false;
@@ -219,6 +222,7 @@ public class VoiceCommand : MonoBehaviour
                 experimentMode = ExperimentMode.HologramRef;
                 modeText.text = "HologramRef Mode";
                 recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, 4);
+                referenceCanvas.SetActive(true);
 
                 grid.GetComponent<MeshRenderer>().enabled = true;
                 object1.GetComponent<MeshRenderer>().enabled = true;
@@ -243,6 +247,7 @@ public class VoiceCommand : MonoBehaviour
                 experimentMode = ExperimentMode.TextRef;
                 modeText.text = "TextRef Mode";
                 recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.x, recognizedSentence.gameObject.GetComponent<RectTransform>().localPosition.y, -4);
+                referenceCanvas.SetActive(true);
 
                 grid.GetComponent<MeshRenderer>().enabled = false;
                 object1.GetComponent<MeshRenderer>().enabled = false;
