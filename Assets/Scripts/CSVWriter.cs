@@ -13,7 +13,7 @@ public class CSVWriter : MonoBehaviour
     }
 
     // Function to write data row, now taking parameters
-    public void WriteData(string subjectName, string experimentMode, string transcribedText, float executionTime)
+    public void WriteData(string subjectName, string experimentMode, string transcribedText, float executionTime, string answer)
     {
         // Define the path of the CSV file
         // filePath = Path.Combine(Application.dataPath, subjectName + "_ExperimentData.csv");
@@ -22,11 +22,11 @@ public class CSVWriter : MonoBehaviour
         // If the file does not exist, create it and write the header row
         if (!File.Exists(filePath))
         {
-            string[] header = { "SubjectName", "ExperimentMode", "TranscribedText", "ExecutionTime" };
+            string[] header = { "SubjectName", "ExperimentMode", "TranscribedText", "ExecutionTime", "Answer" };
             File.AppendAllText(filePath, string.Join(",", header) + "\n");
         }
 
-        string[] data = { subjectName, experimentMode, transcribedText, executionTime.ToString() };
+        string[] data = { subjectName, experimentMode, transcribedText, executionTime.ToString(), answer };
         File.AppendAllText(filePath, string.Join(",", data) + "\n");
     }
 }
