@@ -36,6 +36,8 @@ public class VoiceCommand : MonoBehaviour
     public string processedSentence;
     public GameObject startRecognitionButton;
     public GameObject stopRecognitionButton;
+    public bool isRecognitionStarted = false;
+    public bool isRecognitionStopped = true;
 
     public string[] triggerWords;
     public string[] triggerPhrases;
@@ -270,22 +272,26 @@ public class VoiceCommand : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.S))
             {
-                if (startRecognitionButton.activeSelf)
+                if (isRecognitionStopped)
                 {
                     dictationHandler.StartRecognition();
-                    startRecognitionButton.SetActive(false);
-                    stopRecognitionButton.SetActive(true);
+                    // startRecognitionButton.SetActive(false);
+                    // stopRecognitionButton.SetActive(true);
+                    isRecognitionStarted = true;
+                    isRecognitionStopped = false;
                     audioSource.PlayOneShot(startSound);
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.T))
             {
-                if (stopRecognitionButton.activeSelf && isTimeLogging)
+                if (isRecognitionStarted && isTimeLogging)
                 {
                     dictationHandler.StopRecognition();
-                    startRecognitionButton.SetActive(true);
-                    stopRecognitionButton.SetActive(false);
+                    // startRecognitionButton.SetActive(true);
+                    // stopRecognitionButton.SetActive(false);
+                    isRecognitionStarted = false;
+                    isRecognitionStopped = true;
                     audioSource.PlayOneShot(stopSound);
 
                     isTimeLogging = false;
@@ -302,6 +308,11 @@ public class VoiceCommand : MonoBehaviour
             {
                 audioSource.PlayOneShot(testSound);
             }
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                ResetHologram();
+            }
         }
 
         if (isTimeLogging)
@@ -309,20 +320,20 @@ public class VoiceCommand : MonoBehaviour
             timer += Time.deltaTime;
         }
 
-        if (object1.parent != restingPosition1 || object2.parent != restingPosition2 || object3.parent != restingPosition3)
-        {
-            Transform space = transform.Find("../Space");
-            Transform resetHologramButton = transform.Find("../ResetHologramButton");
-            space.gameObject.SetActive(true);
-            resetHologramButton.gameObject.SetActive(true);
-        }
-        else if (object1.parent == restingPosition1 || object2.parent == restingPosition2 || object3.parent == restingPosition3)
-        {
-            Transform space = transform.Find("../Space");
-            Transform resetHologramButton = transform.Find("../ResetHologramButton");
-            space.gameObject.SetActive(false);
-            resetHologramButton.gameObject.SetActive(false);
-        }
+        // if (object1.parent != restingPosition1 || object2.parent != restingPosition2 || object3.parent != restingPosition3)
+        // {
+        //     Transform space = transform.Find("../Space");
+        //     Transform resetHologramButton = transform.Find("../ResetHologramButton");
+        //     space.gameObject.SetActive(true);
+        //     resetHologramButton.gameObject.SetActive(true);
+        // }
+        // else if (object1.parent == restingPosition1 || object2.parent == restingPosition2 || object3.parent == restingPosition3)
+        // {
+        //     Transform space = transform.Find("../Space");
+        //     Transform resetHologramButton = transform.Find("../ResetHologramButton");
+        //     space.gameObject.SetActive(false);
+        //     resetHologramButton.gameObject.SetActive(false);
+        // }
 
 
         // // Parsed word that is responsible for object's transform : Put, Remove, Rotate
