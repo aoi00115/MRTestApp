@@ -73,6 +73,7 @@ public class VoiceCommand : MonoBehaviour
     public AudioClip startSound;
     public AudioClip stopSound;
     public AudioClip timerSound;
+    public AudioClip testSound;
     public AudioSource audioSource;
     public DictationHandler dictationHandler;
     public CSVWriter csvWriter;
@@ -295,6 +296,11 @@ public class VoiceCommand : MonoBehaviour
                     // Writing subjectName, experimentMode, processedSentence, executionTime into CSV file
                     csvWriter.WriteData(subjectName.text, experimentMode.ToString(), processedSentence, executionTime);
                 }
+            }
+
+            if(Input.GetKeyDown(KeyCode.P))
+            {
+                audioSource.PlayOneShot(testSound);
             }
         }
 
