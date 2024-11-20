@@ -1438,10 +1438,13 @@ public class VoiceCommand : MonoBehaviour
         // Moving objects to their respective resting positions
         object1.SetParent(restingPosition1);
         object1.localPosition = Vector3.zero;
+        object1.localEulerAngles = Vector3.zero;
         object2.SetParent(restingPosition2);
         object2.localPosition = Vector3.zero;
+        object2.localEulerAngles = Vector3.zero;
         object3.SetParent(restingPosition3);
         object3.localPosition = Vector3.zero;
+        object3.localEulerAngles = Vector3.zero;
 
         ResetRecognitionResult();
     }
