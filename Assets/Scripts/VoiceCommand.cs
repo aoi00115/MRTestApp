@@ -325,6 +325,24 @@ public class VoiceCommand : MonoBehaviour
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                dictationHandler.StopRecognition();
+                // startRecognitionButton.SetActive(true);
+                // stopRecognitionButton.SetActive(false);
+                isRecognitionStarted = false;
+                isRecognitionStopped = true;
+                audioSource.PlayOneShot(stopSound);
+
+                isTimeLogging = false;
+                // Resetting all parameters for the next transcription
+                executionTime = timer;
+                timer = 0;
+
+                // Writing subjectName, experimentMode, processedSentence, executionTime into CSV file
+                csvWriter.WriteData(subjectName.text, experimentMode.ToString(), processedSentence, executionTime, "FAIL");
+            }
+
             if(Input.GetKeyDown(KeyCode.P))
             {
                 audioSource.PlayOneShot(testSound);

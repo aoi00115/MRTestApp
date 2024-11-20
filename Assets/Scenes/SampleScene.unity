@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 32196926}
   - component: {fileID: 32196925}
   m_Layer: 5
-  m_Name: ObjectA
+  m_Name: ObjectX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -308,7 +308,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Object A
+  m_text: Object X
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1094,7 +1094,7 @@ GameObject:
   - component: {fileID: 176933617}
   - component: {fileID: 176933616}
   m_Layer: 0
-  m_Name: ObjectC
+  m_Name: ObjectZ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1599,7 +1599,7 @@ GameObject:
   m_Component:
   - component: {fileID: 247830508}
   m_Layer: 0
-  m_Name: RestingPositionC
+  m_Name: RestingPositionZ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1876,7 +1876,7 @@ GameObject:
   - component: {fileID: 277284429}
   - component: {fileID: 277284428}
   m_Layer: 5
-  m_Name: ObjectCImage
+  m_Name: ObjectZImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2823,7 +2823,7 @@ GameObject:
   - component: {fileID: 561937914}
   - component: {fileID: 561937913}
   m_Layer: 0
-  m_Name: ObjectA
+  m_Name: ObjectX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4431,7 +4431,7 @@ GameObject:
   - component: {fileID: 775098342}
   - component: {fileID: 775098341}
   m_Layer: 5
-  m_Name: ObjectAImage
+  m_Name: ObjectXImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6972,7 +6972,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1115237265}
   m_Layer: 0
-  m_Name: RestingPositionA
+  m_Name: RestingPositionX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8297,7 +8297,7 @@ GameObject:
   - component: {fileID: 1331531936}
   - component: {fileID: 1331531935}
   m_Layer: 5
-  m_Name: ObjectBImage
+  m_Name: ObjectYImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9507,7 +9507,7 @@ GameObject:
   - component: {fileID: 1483995547}
   - component: {fileID: 1483995546}
   m_Layer: 5
-  m_Name: ObjectC
+  m_Name: ObjectZ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9552,7 +9552,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Object C
+  m_text: Object Z
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9904,7 +9904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1530026003}
   m_Layer: 0
-  m_Name: RestingPositionB
+  m_Name: RestingPositionY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11526,7 +11526,7 @@ GameObject:
   - component: {fileID: 1692700745}
   - component: {fileID: 1692700744}
   m_Layer: 5
-  m_Name: ObjectB
+  m_Name: ObjectY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11571,7 +11571,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Object B
+  m_text: Object Y
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12125,7 +12125,7 @@ GameObject:
   - component: {fileID: 1770740344}
   - component: {fileID: 1770740343}
   m_Layer: 0
-  m_Name: ObjectB
+  m_Name: ObjectY
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14422,7 +14422,7 @@ MonoBehaviour:
   - {fileID: 60459525}
   recognizedSentence: {fileID: 1049262781}
   processedSentence: 
-  startRecognitionButton: {fileID: 0}
+  startRecognitionButton: {fileID: 1629975170}
   stopRecognitionButton: {fileID: 765671757}
   isRecognitionStarted: 0
   isRecognitionStopped: 1
@@ -14437,9 +14437,9 @@ MonoBehaviour:
   - behind
   - under
   triggerPhrases:
-  - object a
-  - object b
-  - object c
+  - object x
+  - object y
+  - object z
   - tip over
   - in front of
   - to the right of
@@ -14456,9 +14456,9 @@ MonoBehaviour:
   - c2
   - c3
   triggerObjectPhrases:
-  - object a
-  - object b
-  - object c
+  - object x
+  - object y
+  - object z
   - everything
   phrasesToReplace:
   - a one
